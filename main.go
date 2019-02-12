@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -11,25 +12,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// var resolveResp response
-// 	resolveResult := result{
-// 		Latitude:  1.12345,
-// 		Longitude: 1.22345,
-// 		Altitude:  1.32345,
-// 		Accuracy:  4.5,
-// 		AlgorithmType:"a-algorithm",
-// 		NumberOfGatewaysReceived:4,
-// 		NumberOfGatewaysUsed:3,
-// 	}
-
-// 	resolveResp.Result = resolveResult
-
-// }
-
 func Test(w http.ResponseWriter, r *http.Request) {
 	// A very simple health check.
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+
+	b, err := ioutil.ReadAll(r.Body)
 
 	// METTRE LE CODE DE WIWI QUI CALCULE
 	var response swagger.LocalizationResponse
