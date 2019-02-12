@@ -1,0 +1,264 @@
+---
+swagger: "2.0"
+info:
+  version: "v1"
+  title: "Semtech Localization Algorithms"
+host: "col-a1-we-dev-apim.azure-api.net"
+basePath: "/semtech-localization-algorithms/v1"
+tags: []
+schemes:
+- "https"
+security:
+- apiKeyHeader: []
+- apiKeyQuery: []
+paths:
+  /rssi:
+    post:
+      summary: "Rssi"
+      description: "Calculates a location for a device according to rssi data.\n\n\
+        The property \"Location\" is not required. However, the property can be used\
+        \ if the gateway and it's antenna location(s) are not provisioned in the system\
+        \ or if the caller wants to override the provisioned location(s)."
+      operationId: "59f34d6667ba551494199971"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "gatewayReceptionRssiArray"
+        description: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/gatewayReceptionRssiArray"
+        x-exportParamName: "GatewayReceptionRssiArray"
+      responses:
+        200:
+          description: "Success operation"
+          schema:
+            $ref: "#/definitions/localizationResponse"
+  /tdoa:
+    post:
+      summary: "Tdoa"
+      description: "Calculates a location for a device according to rssi combined\
+        \ with tdoa data.\n\nObserve, only one of the fields \"toa\" and \"encryptedToa\"\
+        \ is required.\n\n\"toa\" is in nanoseconds and \"encryptedToa\" is in base64\
+        \ format.\n\nThe property \"antennaLocation\" is not required. However, the\
+        \ property can be used if the gateway and it's antenna location(s) are not\
+        \ provisioned in the system or if the caller wants to override the provisioned\
+        \ location(s)."
+      operationId: "59f34d6667ba551494199974"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "gatewayReceptionTdoaArray"
+        description: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/gatewayReceptionTdoaArray"
+        x-exportParamName: "GatewayReceptionTdoaArray"
+      responses:
+        200:
+          description: "Success operation"
+          schema:
+            $ref: "#/definitions/localizationResponse"
+  /rssiMultiframe:
+    post:
+      summary: "Rssi Multiframe"
+      description: "Calculates a location for a device according to rssi data (multiframe).\n\
+        \nThe property \"Location\" is not required. However, the property can be\
+        \ used if the gateway and it's antenna location(s) are not provisioned in\
+        \ the system or if the caller wants to override the provisioned location(s)."
+      operationId: "5a1c1701a5840134eb76ce9b"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "gatewayReceptionRssiArrayArray"
+        description: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/gatewayReceptionRssiArrayArray"
+        x-exportParamName: "GatewayReceptionRssiArrayArray"
+      responses:
+        200:
+          description: "Success operation"
+          schema:
+            $ref: "#/definitions/localizationResponse"
+  /tdoaMultiframe:
+    post:
+      summary: "Tdoa Multiframe"
+      description: "Calculates a location for a device according to rssi combined\
+        \ with tdoa data (multiframe).\n\nObserve, only one of the fields \"toa\"\
+        \ and \"encryptedToa\" is required.\n\n\"toa\" is in nanoseconds and \"encryptedToa\"\
+        \ is in base64 format.\n\nThe property \"Location\" is not required. However,\
+        \ the property can be used if the gateway and it's antenna location(s) are\
+        \ not provisioned in the system or if the caller wants to override the provisioned\
+        \ location(s)."
+      operationId: "5a1c19f4c2a18ab275ac584d"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "gatewayReceptionTdoaArrayArray"
+        description: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/gatewayReceptionTdoaArrayArray"
+        x-exportParamName: "GatewayReceptionTdoaArrayArray"
+      responses:
+        200:
+          description: "Success operation"
+          schema:
+            $ref: "#/definitions/localizationResponse"
+securityDefinitions:
+  apiKeyHeader:
+    type: "apiKey"
+    name: "Ocp-Apim-Subscription-Key"
+    in: "header"
+  apiKeyQuery:
+    type: "apiKey"
+    name: "subscription-key"
+    in: "query"
+definitions:
+  gatewayReceptionRssi:
+    type: "object"
+    required:
+    - "antennaId"
+    - "gatewayId"
+    - "rssi"
+    - "snr"
+    properties:
+      gatewayId:
+        type: "string"
+      antennaId:
+        type: "integer"
+        format: "int16"
+      rssi:
+        type: "number"
+        format: "double"
+      snr:
+        type: "number"
+        format: "double"
+      antennaLocation:
+        $ref: "#/definitions/antennaLocation"
+  gatewayReceptionTdoa:
+    type: "object"
+    required:
+    - "antennaId"
+    - "encryptedToa"
+    - "gatewayId"
+    - "rssi"
+    - "snr"
+    - "toa"
+    properties:
+      gatewayId:
+        type: "string"
+      antennaId:
+        type: "integer"
+        format: "int16"
+      rssi:
+        type: "number"
+        format: "double"
+      snr:
+        type: "number"
+        format: "double"
+      toa:
+        type: "integer"
+        format: "uint64"
+      encryptedToa:
+        type: "string"
+      antennaLocation:
+        $ref: "#/definitions/antennaLocation"
+  localizationResponse:
+    type: "object"
+    properties:
+      result:
+        $ref: "#/definitions/locationEstimate"
+      warnings:
+        type: "array"
+        items:
+          type: "string"
+      errors:
+        type: "array"
+        items:
+          type: "string"
+      correlationId:
+        type: "string"
+    example:
+      result:
+        altitude: 1.46581298050294517310021547018550336360931396484375
+        latitude: 0.80082819046101150206595775671303272247314453125
+        accuracy: 5.962133916683182377482808078639209270477294921875
+        longitude: 6.02745618307040320615897144307382404804229736328125
+      warnings:
+      - "warnings"
+      - "warnings"
+      correlationId: "correlationId"
+      errors:
+      - "errors"
+      - "errors"
+  locationEstimate:
+    type: "object"
+    required:
+    - "accuracy"
+    - "altitude"
+    - "latitude"
+    - "longitude"
+    properties:
+      latitude:
+        type: "number"
+        format: "double"
+      longitude:
+        type: "number"
+        format: "double"
+      altitude:
+        type: "number"
+        format: "double"
+      accuracy:
+        type: "number"
+        format: "double"
+    example:
+      altitude: 1.46581298050294517310021547018550336360931396484375
+      latitude: 0.80082819046101150206595775671303272247314453125
+      accuracy: 5.962133916683182377482808078639209270477294921875
+      longitude: 6.02745618307040320615897144307382404804229736328125
+  antennaLocation:
+    type: "object"
+    required:
+    - "altitude"
+    - "latitude"
+    - "longitude"
+    properties:
+      latitude:
+        type: "number"
+        format: "double"
+      longitude:
+        type: "number"
+        format: "double"
+      altitude:
+        type: "number"
+        format: "double"
+  gatewayReceptionRssiArray:
+    type: "array"
+    items:
+      $ref: "#/definitions/gatewayReceptionRssi"
+  gatewayReceptionTdoaArray:
+    type: "array"
+    items:
+      $ref: "#/definitions/gatewayReceptionTdoa"
+  gatewayReceptionRssiArrayArray:
+    type: "array"
+    items:
+      $ref: "#/definitions/gatewayReceptionRssiArray"
+  gatewayReceptionTdoaArrayArray:
+    type: "array"
+    items:
+      $ref: "#/definitions/gatewayReceptionTdoaArray"
