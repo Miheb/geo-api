@@ -1,14 +1,17 @@
-FROM golang:latest
+FROM golang:1.11-alpine AS development
 
-COPY ./swagger $GOPATH/src/swagger
-
-WORKDIR $GOPATH/src/timo69/main
-
+WORKDIR /go/src/github.com/campus-iot/geo-API
 COPY . .
 
-RUN go get ./...
-RUN go install -v ./...
+RUN apk add --no-cache ca-certificates git
 
-EXPOSE 8081
+RUN go get -u ./... && \
+    go build
 
-CMD ["main"]
+
+FROM alpine:latest AS production
+
+WORKDIR /root/
+COPY --from=development /go/src/github.com/campus-iot/geo-API/geo-API .
+
+CMD ["./geo-API"]
