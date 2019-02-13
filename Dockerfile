@@ -13,5 +13,7 @@ FROM alpine:latest AS production
 
 WORKDIR /root/
 COPY --from=development /go/src/github.com/campus-iot/geo-API/geo-API .
+COPY test/data.json test/data.json
+COPY schema/geo-schema.json schema/geo-schema.json
 
 CMD ["./geo-API"]

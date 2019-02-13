@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 
 	"github.com/campus-iot/geo-API/swagger"
@@ -43,6 +44,14 @@ func Test(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	fmt.Printf("==========")
+	ex, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	exPath := filepath.Dir(ex)
+	fmt.Println(exPath)
+	fmt.Printf("==========")
 
 	pathSchema, _ := filepath.Abs("schema/geo-schema.json")
 	pathDoc, _ := filepath.Abs("test/data.json")
