@@ -1,17 +1,9 @@
-FROM golang:1.11-alpine AS development
-
+FROM golang:1.11 AS build
 WORKDIR /go/src/github.com/campus-iot/geo-API
 COPY . .
+RUN go get -d -v ./... && go build
 
-RUN apk add --no-cache ca-certificates git
-
-RUN go get -u ./... && \
-    go build
-
-
-FROM alpine:latest AS production
-
+FROM alpine:latest AS prod
 WORKDIR /root/
-COPY --from=development /go/src/github.com/campus-iot/geo-API/geo-API .
-
+COPY --from=build /go/src/github.com/campus-iot/geo-API/geo-API .
 CMD ["./geo-API"]
