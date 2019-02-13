@@ -1,0 +1,41 @@
+[
+  {
+    "gatewayId": "string",
+    "antennaId": 0,
+    "rssi": 0,
+    "snr": 0,
+    "toa": 0,
+    "encryptedToa": "",
+    "antennaLocation": {
+      "latitude": 0,
+      "longitude": 0,
+      "altitude": 0
+    }
+  },
+  {
+    "gatewayId": "string",
+    "antennaId": 0,
+    "rssi": 0,
+    "snr": 0,
+    "toa": 0,
+    "encryptedToa": "",
+    "antennaLocation": {
+      "latitude": 0,
+      "longitude": 0,
+      "altitude": 0
+    }
+  },
+  {
+    "gatewayId": "string",
+    "antennaId": 0,
+    "rssi": 0,
+    "snr": 0,
+    "toa": 0,
+    "encryptedToa": "",
+    "antennaLocation": {
+      "latitude": 0,
+      "longitude": 0,
+      "altitude": 0
+    }
+  }
+]
