@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"path/filepath"
 
 	"github.com/campus-iot/geo-API/swagger"
 	"github.com/gorilla/mux"
@@ -42,6 +43,29 @@ func Test(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+	pathSchema, _ := filepath.Abs("schema/geo-schema.json")
+	pathDoc, _ := filepath.Abs("test/data.json")
+
+	schemaLoader := gojsonschema.NewReferenceLoader("file:///" + pathSchema)
+
+	documentLoader := gojsonschema.NewReferenceLoader("file:///" + pathDoc)
+
+	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	if result.Valid() {
+		fmt.Printf("The document is valid\n")
+	} else {
+		fmt.Printf("The document is not valid. see errors :\n")
+		for _, desc := range result.Errors() {
+			fmt.Printf("- %s\n", desc)
+		}
+	}
+
 	routeur := mux.NewRouter()
 	routeur.HandleFunc("/CalculTriloc", Test)
 	http.Handle("/", routeur)
