@@ -14,30 +14,21 @@ You will need a Go environment to run the API.
 
 This is how you start the project.
 
-'''
-go get ./...
-go run main.go
-'''
+`go get ./...`
+
+`go run main.go`
 
 ## Deployment
 
 To run in production, you should use docker.
 
-'''
-docker run theo024/geo-api
-'''
+`docker run theo024/geo-api`
 
 ## Authors
 
-* **Guillaume Besnard** - **Benjamin Besner** - **Timothée Depriester** -  **Théo Levesque ** - **William Weill** 
+**Guillaume Besnard** - **Benjamin Besner** - **Timothée Depriester** -  **Théo Levesque** - **William Weill** 
 
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
