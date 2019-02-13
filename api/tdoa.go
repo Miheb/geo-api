@@ -4,29 +4,54 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
+	"path/filepath"
 
 	"github.com/campus-iot/geo-api/models"
+	"github.com/campus-iot/geo-api/utils"
+	"github.com/xeipuuv/gojsonschema"
 )
 
 func GetTdoa(w http.ResponseWriter, r *http.Request) {
-	var response models.LocalizationResponse
-	tmp := models.LocationEstimate{
-		Latitude:  1.12345,
-		Longitude: 1.22345,
-		Altitude:  1.32345,
-		Accuracy:  4.5,
+	pathSchema, _ := filepath.Abs("schema/geo-schema.json")
+	schemaLoader := gojsonschema.NewReferenceLoader("file://" + pathSchema)
+
+	body, _ := ioutil.ReadAll(r.Body)
+	documentLoader := gojsonschema.NewStringLoader(string(body))
+
+	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
+	if err != nil {
+		panic(err.Error())
 	}
 
-	response.Result = &tmp
+	if !result.Valid() {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+	}
 
-	b, err := json.Marshal(&response)
+	var gateways []models.GatewayReceptionTdoa
+	err2 := json.Unmarshal(body, &gateways)
+	if err2 != nil {
+		fmt.Println(err2)
+	}
+
+	if len(gateways) < 3 {
+		http.Error(w, "Not enough gateways to locate", http.StatusBadRequest)
+	}
+
+	fmt.Println()
+
+	location := utils.Inter3(gateways[0], gateways[1], gateways[2])
+
+	response := models.LocalizationResponse{
+		Result: &location,
+	}
+
+	jsonResponse, err := json.Marshal(&response)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	// In the future we could report back on the status of our DB, or our cache
-	// (e.g. Redis) by performing a simple PING, and include them in the response.
-	io.WriteString(w, string(b))
+	io.WriteString(w, string(jsonResponse))
 }

@@ -19,7 +19,7 @@ func isEqualPlace(gw1, gw2 models.GatewayReceptionTdoa) bool {
 	return isEqualLat(gw1, gw2) && isEqualLong(gw1, gw2)
 }
 
-func inter3(g1, g2, g3 models.GatewayReceptionTdoa) models.LocationEstimate {
+func Inter3(g1, g2, g3 models.GatewayReceptionTdoa) models.LocationEstimate {
 
 	CX2 := 2 * (g2.AntennaLocation.Latitude - g1.AntennaLocation.Latitude)
 	CX3 := 2 * (g3.AntennaLocation.Latitude - g1.AntennaLocation.Latitude)
