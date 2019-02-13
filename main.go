@@ -10,8 +10,10 @@
 package main
 
 import (
-	"log"
-	"net/http"
+	"fmt"
+	"encoding/json"
+	"./swagger"
+	"math"
 
 	// WARNING!
 	// Change this to a fully-qualified import path
@@ -20,13 +22,95 @@ import (
 	//
 	//    sw "github.com/myname/myrepo/go"
 	//
-	sw "./go"
+	// sw "./go"
 )
 
+func isEqualLat (gw1, gw2 swagger.GatewayReceptionTdoa) bool {
+	return gw1.AntennaLocation.Latitude == gw2.AntennaLocation.Latitude
+}
+
+func isEqualLong (gw1, gw2 swagger.GatewayReceptionTdoa) bool {
+	return gw1.AntennaLocation.Longitude == gw2.AntennaLocation.Longitude
+}
+
+func isEqualPlace (gw1, gw2 swagger.GatewayReceptionTdoa) bool {
+	return isEqualLat(gw1,gw2) && isEqualLong(gw1,gw2)
+}
+
+func inter3 (g1, g2, g3 swagger.GatewayReceptionTdoa) swagger.LocationEstimate {
+
+	CX2 := 2*(g2.AntennaLocation.Latitude - g1.AntennaLocation.Latitude)
+	CX3 := 2*(g3.AntennaLocation.Latitude - g1.AntennaLocation.Latitude)
+	CY2 := 2*(g2.AntennaLocation.Longitude - g1.AntennaLocation.Longitude)
+	CY3 := 2*(g3.AntennaLocation.Longitude - g1.AntennaLocation.Longitude)
+
+	if isEqualPlace(g1,g2) || isEqualPlace(g1,g3)
+
+
+	CR2 := math.Pow(g1.Rssi, 2) - math.Pow(g2.Rssi, 2) + (math.Pow(g2.AntennaLocation.Latitude,2) + math.Pow(g2.AntennaLocation.Longitude,2)) - (math.Pow(g1.AntennaLocation.Latitude,2) + math.Pow(g1.AntennaLocation.Longitude,2))
+	CR3 := math.Pow(g1.Rssi, 2) - math.Pow(g3.Rssi, 2) + (math.Pow(g3.AntennaLocation.Latitude,2) + math.Pow(g3.AntennaLocation.Longitude,2)) - (math.Pow(g1.AntennaLocation.Latitude,2) + math.Pow(g1.AntennaLocation.Longitude,2))
+
+	CYnum := CR2 - CX2 * CR3 / CX3
+	CYden := CY2 - CX2 * CY3 / CX3
+
+	CY := CYnum / CYden
+	CX := (CR3 - CY * CY3) / CX3
+
+	return swagger.LocationEstimate{CX, CY, 0, 0}
+}
+
 func main() {
-	log.Printf("Server started")
 
-	router := sw.NewRouter()
+	var json3Sat = []byte(`[
+	{
+		"gatewayId": "string",
+    "antennaId": 0,
+    "rssi": 2,
+    "snr": 0,
+    "toa": 0,
+    "encryptedToa": "",
+    "antennaLocation": {
+      "latitude": 2,
+      "longitude": 2,
+      "altitude": 0
+		}
+	},
+	{
+		"gatewayId": "string",
+    "antennaId": 0,
+    "rssi": 2,
+    "snr": 0,
+    "toa": 0,
+    "encryptedToa": "",
+    "antennaLocation": {
+      "latitude": 4,
+      "longitude": 0,
+      "altitude": 0
+		}
+	},{
+		"gatewayId": "string",
+    "antennaId": 0,
+    "rssi": 2,
+    "snr": 0,
+    "toa": 0,
+    "encryptedToa": "",
+    "antennaLocation": {
+      "latitude": 4,
+      "longitude": 4,
+      "altitude": 0
+		}
+	}
+	]`)
+	var sats []swagger.GatewayReceptionTdoa
+	err := json.Unmarshal(json3Sat, &sats)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	fmt.Printf("%v", sats)
+	if len(sats) < 3 {
+		fmt.Println("error: you should provide at least 3 gateway data")
+	} else {
+		fmt.Println(inter3(sats[0], sats[1], sats[2]))
+	}
 
-	log.Fatal(http.ListenAndServe(":8080", router))
 }
