@@ -12,7 +12,6 @@
         "rssi",
         "snr",
         "toa",
-        "encryptedToa",
         "antennaLocation"
       ],
       "properties": {
