@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 
-	"./swagger"
+	"github.com/campus-iot/geo-API/swagger"
 	"github.com/gorilla/mux"
 )
 
@@ -46,5 +46,5 @@ func main() {
 	routeur.HandleFunc("/CalculTriloc", Test)
 	http.Handle("/", routeur)
 	print("Server started")
-	log.Fatal(http.ListenAndServe("localhost:8080", routeur))
+	log.Fatal(http.ListenAndServe(":8081", routeur))
 }
