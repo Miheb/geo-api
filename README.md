@@ -1,4 +1,4 @@
-# geo-API
+# geo-api
 
 An API that allows you to locate your LoRa device.
 
@@ -26,9 +26,8 @@ To run in production, you should use docker.
 
 ## Authors
 
-**Guillaume Besnard** - **Benjamin Besner** - **Timothée Depriester** -  **Théo Levesque** - **William Weill** 
-
+**Guillaume Besnard** - **Benjamin Besner** - **Timothée Depriester** -  **Théo Levesque** - **William Weill**
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
