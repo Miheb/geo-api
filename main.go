@@ -9,6 +9,7 @@ import (
 
 	"github.com/campus-iot/geo-API/swagger"
 	"github.com/gorilla/mux"
+	"github.com/xeipuuv/gojsonschema"
 )
 
 func Test(w http.ResponseWriter, r *http.Request) {
