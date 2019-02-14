@@ -14,7 +14,7 @@ You will need a Go environment to run the API.
 
 This is how you start the project.
 
-`go get ./...`
+`dep ensure`
 
 `go run main.go`
 
