@@ -22,7 +22,7 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
-		panic(err.Error())
+		http.Error(w, "Incorrect request", http.StatusBadRequest)
 	}
 
 	if !result.Valid() {
@@ -33,13 +33,13 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 	err2 := json.Unmarshal(body, &gateways)
 	if err2 != nil {
 		fmt.Println(err2)
+		http.Error(w, "Internal erro", http.StatusInternalServerError)
+
 	}
 
 	if len(gateways) < 3 {
-		http.Error(w, "Not enough gateways to locate", http.StatusBadRequest)
+		http.Error(w, "Not enough gateways to locate, must be at least 3", http.StatusBadRequest)
 	}
-
-	fmt.Println()
 
 	location := utils.Inter3(gateways[0], gateways[1], gateways[2])
 
@@ -50,7 +50,7 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 	jsonResponse, err := json.Marshal(&response)
 	if err != nil {
 		fmt.Println(err)
-		return
+		http.Error(w, "Internal erro", http.StatusInternalServerError)
 	}
 
 	io.WriteString(w, string(jsonResponse))
