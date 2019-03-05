@@ -1,19 +1,19 @@
-FROM golang:1.11-alpine AS development
+FROM golang:latest AS build
 
-WORKDIR /go/src/github.com/campus-iot/geo-API
+WORKDIR /go/src/github.com/campus-iot/geo-api
 COPY . .
 
-RUN apk add --no-cache ca-certificates git
+RUN curl -fsSL -o /usr/local/bin/dep https://github.com/golang/dep/releases/download/v0.5.0/dep-linux-amd64 && \
+    chmod +x /usr/local/bin/dep && \
+    dep ensure -vendor-only && \
+    CGO_ENABLED=0 go build -ldflags "-s -w" -a -installsuffix cgo -o build/geo-api
 
-RUN go get -u ./... && \
-    go build
 
-
-FROM alpine:latest AS production
+FROM alpine:latest AS prod
 
 WORKDIR /root/
-COPY --from=development /go/src/github.com/campus-iot/geo-API/geo-API .
-COPY test/data.json test/data.json
+
+COPY --from=build /go/src/github.com/campus-iot/geo-api/build/geo-api .
 COPY schema/geo-schema.json schema/geo-schema.json
 
-CMD ["./geo-API"]
+ENTRYPOINT ["./geo-api"]

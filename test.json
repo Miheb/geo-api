@@ -2,39 +2,39 @@
   {
     "gatewayId": "string",
     "antennaId": 0,
-    "rssi": 0,
+    "rssi": 1,
     "snr": 0,
     "toa": 0,
     "encryptedToa": "",
     "antennaLocation": {
-      "latitude": 0,
-      "longitude": 0,
+      "latitude": 1,
+      "longitude": 2,
       "altitude": 0
     }
   },
   {
     "gatewayId": "string",
     "antennaId": 0,
-    "rssi": 0,
+    "rssi": 2,
     "snr": 0,
     "toa": 0,
     "encryptedToa": "",
     "antennaLocation": {
-      "latitude": 0,
-      "longitude": 0,
+      "latitude": 4,
+      "longitude": 5,
       "altitude": 0
     }
   },
   {
     "gatewayId": "string",
     "antennaId": 0,
-    "rssi": 0,
+    "rssi": 12,
     "snr": 0,
     "toa": 0,
     "encryptedToa": "",
     "antennaLocation": {
-      "latitude": 0,
-      "longitude": 0,
+      "latitude": 2,
+      "longitude": 6,
       "altitude": 0
     }
   }
