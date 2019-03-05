@@ -7,25 +7,34 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
-
+	log "github.com/sirupsen/logrus"
 	"github.com/campus-iot/geo-api/models"
 	"github.com/campus-iot/geo-api/utils"
 	"github.com/xeipuuv/gojsonschema"
 )
 
 func GetTdoa(w http.ResponseWriter, r *http.Request) {
+
 	pathSchema, _ := filepath.Abs("schema/geo-schema.json")
 	schemaLoader := gojsonschema.NewReferenceLoader("file://" + pathSchema)
 
 	body, _ := ioutil.ReadAll(r.Body)
 	documentLoader := gojsonschema.NewStringLoader(string(body))
-
+	log.WithFields(log.Fields{
+		"======BEGINNING GetTDOA": r
+	}).Info("========")
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
+		log.WithFields(log.Fields{
+			"ERROR validate": err
+		}).Info("========")
 		http.Error(w, "Incorrect request", http.StatusBadRequest)
 	}
 
 	if !result.Valid() {
+		log.WithFields(log.Fields{
+			"ERROR badrequest": err
+		}).Info("========")
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 	}
 
@@ -52,6 +61,10 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		http.Error(w, "Internal erro", http.StatusInternalServerError)
 	}
+
+	log.WithFields(log.Fields{
+		"ENDING GETTDOA"
+	}).Info("========")
 
 	io.WriteString(w, string(jsonResponse))
 }
