@@ -20,4 +20,8 @@
 /vendor/
 /Godeps/
 
+
+ .vscode/
+ debug
+ geo-api
 # End of https://www.gitignore.io/api/go

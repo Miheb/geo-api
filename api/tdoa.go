@@ -26,7 +26,7 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
 		log.WithFields(log.Fields{"ERROR validate": err}).Info("========")
-		http.Error(w, "Incorrect request", http.StatusBadRequest)
+		http.Error(w, "Incorrect request : "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -40,7 +40,7 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 	err2 := json.Unmarshal(body, &gateways)
 	if err2 != nil {
 		fmt.Println(err2)
-		http.Error(w, "Internal erro", http.StatusInternalServerError)
+		http.Error(w, "Internal error : "+err2.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -58,7 +58,7 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 	jsonResponse, err := json.Marshal(&response)
 	if err != nil {
 		fmt.Println(err)
-		http.Error(w, "Internal erro", http.StatusInternalServerError)
+		http.Error(w, "Internal error", http.StatusInternalServerError)
 		return
 	}
 
