@@ -13,7 +13,6 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 )
 
-//GetTdoa getting tdoa
 func GetTdoa(w http.ResponseWriter, r *http.Request) {
 
 	// Load JSON Schema
