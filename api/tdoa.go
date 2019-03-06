@@ -37,6 +37,7 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Unmarshal JSON
 	var gateways []models.GatewayReceptionTdoa
 	err = json.Unmarshal(body, &gateways)
 	if err != nil {
@@ -45,18 +46,20 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Verify the number of gateways
 	if len(gateways) < 3 {
 		http.Error(w, "Not enough gateways to locate, must be at least 3", http.StatusBadRequest)
 		log.Println("Error not enough gateways to locate, must be at least 3")
 		return
 	}
 
+	// Trilateration
 	location := utils.Inter3(gateways[0], gateways[1], gateways[2])
-
 	response := models.LocalizationResponse{
 		Result: &location,
 	}
 
+	// Marshal JSON
 	jsonResponse, err := json.Marshal(&response)
 	if err != nil {
 		http.Error(w, "Internal error", http.StatusInternalServerError)
@@ -66,5 +69,6 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("Ending GetTdoa")
 
+	// Send response
 	io.WriteString(w, string(jsonResponse))
 }
