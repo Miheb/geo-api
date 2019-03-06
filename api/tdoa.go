@@ -2,50 +2,52 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"path/filepath"
 
 	"github.com/campus-iot/geo-api/models"
 	"github.com/campus-iot/geo-api/utils"
-	log "github.com/sirupsen/logrus"
 	"github.com/xeipuuv/gojsonschema"
 )
 
 //GetTdoa getting tdoa
 func GetTdoa(w http.ResponseWriter, r *http.Request) {
 
+	// Load JSON Schema
 	pathSchema, _ := filepath.Abs("schema/geo-schema.json")
 	schemaLoader := gojsonschema.NewReferenceLoader("file://" + pathSchema)
-
 	body, _ := ioutil.ReadAll(r.Body)
 	documentLoader := gojsonschema.NewStringLoader(string(body))
-	log.WithFields(log.Fields{"======BEGINNING GetTDOA": "testé"}).Info("========")
+
+	log.Println("Beginning GetTdoa")
+
+	// Validate JSON
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
-		log.WithFields(log.Fields{"ERROR validate": err}).Info("========")
 		http.Error(w, "Incorrect request : "+err.Error(), http.StatusBadRequest)
+		log.Println("Error validate - " + err.Error())
 		return
 	}
-
 	if !result.Valid() {
-		log.WithFields(log.Fields{"ERROR badrequest": err}).Info("========")
 		http.Error(w, "Bad Request", http.StatusBadRequest)
+		log.Println("JSON Invalid - " + err.Error())
 		return
 	}
 
 	var gateways []models.GatewayReceptionTdoa
-	err2 := json.Unmarshal(body, &gateways)
-	if err2 != nil {
-		fmt.Println(err2)
-		http.Error(w, "Internal error : "+err2.Error(), http.StatusInternalServerError)
+	err = json.Unmarshal(body, &gateways)
+	if err != nil {
+		http.Error(w, "Internal error : "+err.Error(), http.StatusInternalServerError)
+		log.Println("Error JSON Unmarshal - " + err.Error())
 		return
 	}
 
 	if len(gateways) < 3 {
 		http.Error(w, "Not enough gateways to locate, must be at least 3", http.StatusBadRequest)
+		log.Println("Error not enough gateways to locate, must be at least 3")
 		return
 	}
 
@@ -57,12 +59,12 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 
 	jsonResponse, err := json.Marshal(&response)
 	if err != nil {
-		fmt.Println(err)
 		http.Error(w, "Internal error", http.StatusInternalServerError)
+		log.Println("Error JSON Marshal - " + err.Error())
 		return
 	}
 
-	log.WithFields(log.Fields{"ENDING GETTDOA": jsonResponse}).Info("========")
+	log.Println("Ending GetTdoa")
 
 	io.WriteString(w, string(jsonResponse))
 }
