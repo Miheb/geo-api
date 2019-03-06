@@ -1,115 +1,115 @@
 {
-    "definitions": {},
-    "type": "array",
-    "title": "The geo schema",
-    "items": {
-      "$id": "#/items",
-      "type": "object",
-      "title": "The Items Schema",
-      "required": [
-        "gatewayId",
-        "antennaId",
-        "rssi",
-        "snr",
-        "toa",
-        "antennaLocation"
-      ],
-      "properties": {
-        "gatewayId": {
-          "$id": "#/items/properties/gatewayId",
-          "type": "string",
-          "title": "The Gatewayid Schema",
-          "default": "",
-          "examples": [
-            "string"
-          ],
-          "pattern": "^(.*)$"
-        },
-        "antennaId": {
-          "$id": "#/items/properties/antennaId",
-          "type": "integer",
-          "title": "The Antennaid Schema",
-          "default": 0,
-          "examples": [
-            0
-          ]
-        },
-        "rssi": {
-          "$id": "#/items/properties/rssi",
-          "type": "integer",
-          "title": "The Rssi Schema",
-          "default": 0,
-          "examples": [
-            0
-          ]
-        },
-        "snr": {
-          "$id": "#/items/properties/snr",
-          "type": "integer",
-          "title": "The Snr Schema",
-          "default": 0,
-          "examples": [
-            0
-          ]
-        },
-        "toa": {
-          "$id": "#/items/properties/toa",
-          "type": "integer",
-          "title": "The Toa Schema",
-          "default": 0,
-          "examples": [
-            0
-          ]
-        },
-        "encryptedToa": {
-          "$id": "#/items/properties/encryptedToa",
-          "type": "string",
-          "title": "The Encryptedtoa Schema",
-          "default": "",
-          "examples": [
-            ""
-          ],
-          "pattern": "^(.*)$"
-        },
-        "antennaLocation": {
-          "$id": "#/items/properties/antennaLocation",
-          "type": "object",
-          "title": "The Antennalocation Schema",
-          "required": [
-            "latitude",
-            "longitude",
-            "altitude"
-          ],
-          "properties": {
-            "latitude": {
-              "$id": "#/items/properties/antennaLocation/properties/latitude",
-              "type": "integer",
-              "title": "The Latitude Schema",
-              "default": 0,
-              "examples": [
-                0
-              ]
-            },
-            "longitude": {
-              "$id": "#/items/properties/antennaLocation/properties/longitude",
-              "type": "integer",
-              "title": "The Longitude Schema",
-              "default": 0,
-              "examples": [
-                0
-              ]
-            },
-            "altitude": {
-              "$id": "#/items/properties/antennaLocation/properties/altitude",
-              "type": "integer",
-              "title": "The Altitude Schema",
-              "default": 0,
-              "examples": [
-                0
-              ]
-            }
+  "definitions": {},
+  "type": "array",
+  "title": "The geo schema",
+  "items": {
+    "$id": "#/items",
+    "type": "object",
+    "title": "The Items Schema",
+    "required": [
+      "gatewayId",
+      "antennaId",
+      "rssi",
+      "snr",
+      "toa",
+      "antennaLocation"
+    ],
+    "properties": {
+      "gatewayId": {
+        "$id": "#/items/properties/gatewayId",
+        "type": "string",
+        "title": "The Gatewayid Schema",
+        "default": "",
+        "examples": [
+          "string"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "antennaId": {
+        "$id": "#/items/properties/antennaId",
+        "type": "integer",
+        "title": "The Antennaid Schema",
+        "default": 0,
+        "examples": [
+          0
+        ]
+      },
+      "rssi": {
+        "$id": "#/items/properties/rssi",
+        "type": "integer",
+        "title": "The Rssi Schema",
+        "default": 0,
+        "examples": [
+          0
+        ]
+      },
+      "snr": {
+        "$id": "#/items/properties/snr",
+        "type": "integer",
+        "title": "The Snr Schema",
+        "default": 0,
+        "examples": [
+          0
+        ]
+      },
+      "toa": {
+        "$id": "#/items/properties/toa",
+        "type": "integer",
+        "title": "The Toa Schema",
+        "default": 0,
+        "examples": [
+          0
+        ]
+      },
+      "encryptedToa": {
+        "$id": "#/items/properties/encryptedToa",
+        "type": "string",
+        "title": "The Encryptedtoa Schema",
+        "default": "",
+        "examples": [
+          ""
+        ],
+        "pattern": "^(.*)$"
+      },
+      "antennaLocation": {
+        "$id": "#/items/properties/antennaLocation",
+        "type": "object",
+        "title": "The Antennalocation Schema",
+        "required": [
+          "latitude",
+          "longitude",
+          "altitude"
+        ],
+        "properties": {
+          "latitude": {
+            "$id": "#/items/properties/antennaLocation/properties/latitude",
+            "type": "integer",
+            "title": "The Latitude Schema",
+            "default": 0,
+            "examples": [
+              0
+            ]
+          },
+          "longitude": {
+            "$id": "#/items/properties/antennaLocation/properties/longitude",
+            "type": "integer",
+            "title": "The Longitude Schema",
+            "default": 0,
+            "examples": [
+              0
+            ]
+          },
+          "altitude": {
+            "$id": "#/items/properties/antennaLocation/properties/altitude",
+            "type": "integer",
+            "title": "The Altitude Schema",
+            "default": 0,
+            "examples": [
+              0
+            ]
           }
         }
       }
     }
   }
+}
