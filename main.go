@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"geo-api/api"
 	"log"
 	"net/http"
 
-	"github.com/campus-iot/geo-api/api"
 	"github.com/gorilla/mux"
 )
 
