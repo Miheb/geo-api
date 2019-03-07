@@ -30,11 +30,12 @@ func LatLonToXY(lat, lon, LatOrigin, LonOrigin float64) (float64, float64) {
 	return x, y
 }
 
+//Origin is set at the intersection of greenwitch and the equator, perhaps it might be changed
 func XYToLatLon(x, y, LatOrigin, LonOrigin float64) (float64, float64) {
 	radius := 6371.0
 	var LatResult, LonResult float64
-	LatResult = LatOrigin + ((360. / y) / (2. * math.Pi * radius))
-	LonResult = LonOrigin + ((660. * x) / (2 * math.Pi * radius * math.Cos(((LatResult+LatOrigin)/2.)*(math.Pi/180.))))
+	LatResult = LatOrigin + ((360. * y) / (2. * math.Pi * radius))
+	LonResult = LonOrigin + ((360. * x) / (2. * math.Pi * radius * math.Cos(((LatResult+LatOrigin)/2.)*(math.Pi/180.))))
 
 	return LatResult, LonResult
 }
@@ -139,3 +140,11 @@ func tdoa(g1, g2, g3 swagger.GatewayReceptionTdoa) swagger.LocationEstimate {
 	return swagger.LocationEstimate{x, y, 0, 0}
 
 }
+
+// func main() {
+// 	x, y := LatLonToXY(45.1845498, 5.7525638, 45.1777139, 5.7306643)
+// 	lat, lon := XYToLatLon(1.7164330526576157, 0.7601173990493916, 45.1777139, 5.7306643)
+// 	fmt.Print(x, y)
+// 	fmt.Print("\n")
+// 	fmt.Print(lat, lon)
+// }
