@@ -63,8 +63,8 @@ func Inter3(g1, g2, g3 models.GatewayReceptionTdoa) models.LocationEstimate {
 	CX3 := 2 * (G3y - G1y)
 	CY2 := 2 * (G2x - G1x)
 	CY3 := 2 * (G3x - G1x)
-	CR2 := math.Pow(g1.Rssi, 2) - math.Pow(g2.Rssi, 2) + (math.Pow(G2y, 2) + math.Pow(G2x, 2)) - (math.Pow(G1y, 2) + math.Pow(G1x, 2))
-	CR3 := math.Pow(g1.Rssi, 2) - math.Pow(g3.Rssi, 2) + (math.Pow(G3y, 2) + math.Pow(G3x, 2)) - (math.Pow(G1y, 2) + math.Pow(G1x, 2))
+	CR2 := math.Pow(float64(g1.Rssi), 2) - math.Pow(float64(g2.Rssi), 2) + (math.Pow(G2y, 2) + math.Pow(G2x, 2)) - (math.Pow(G1y, 2) + math.Pow(G1x, 2))
+	CR3 := math.Pow(float64(g1.Rssi), 2) - math.Pow(float64(g3.Rssi), 2) + (math.Pow(G3y, 2) + math.Pow(G3x, 2)) - (math.Pow(G1y, 2) + math.Pow(G1x, 2))
 
 	var CX float64
 	var CY float64
