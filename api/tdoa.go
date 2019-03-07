@@ -6,41 +6,22 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	//"path/filepath"
 
 	"github.com/campus-iot/geo-api/models"
 	"github.com/campus-iot/geo-api/utils"
-	//"github.com/xeipuuv/gojsonschema"
 )
 
 func GetTdoa(w http.ResponseWriter, r *http.Request) {
 
-	// Load JSON Schema
-	//pathSchema, _ := filepath.Abs("schema/geo-schema.json")
-	//schemaLoader := gojsonschema.NewReferenceLoader("file://" + pathSchema)
+	// Load JSON
 	body, _ := ioutil.ReadAll(r.Body)
-	log.Println("Beginning GetTdoa"+string(body))
-	//documentLoader := gojsonschema.NewStringLoader(string(body))
-
-
-	// Validate JSON
-	//result, err := gojsonschema.Validate(schemaLoader, documentLoader)
-	/*if err != nil {
-		http.Error(w, "Incorrect request : "+err.Error(), http.StatusBadRequest)
-		log.Println("Error validate - " + err.Error())
-		return
-	}
-	if !result.Valid() {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
-		log.Println("JSON Invalid - " + err.Error())
-		return
-	}*/
+	log.Println("GetTdoa request received : " + string(body))
 
 	// Unmarshal JSON
 	var tdoaRequest models.TdoaRequest
 	errUnmarshal := json.Unmarshal(body, &tdoaRequest)
 	if errUnmarshal != nil {
-		http.Error(w, "Internal error : "+errUnmarshal.Error(), http.StatusInternalServerError)
+		http.Error(w, "Internal error : " + errUnmarshal.Error(), http.StatusInternalServerError)
 		log.Println("Error JSON Unmarshal - " + errUnmarshal.Error())
 		return
 	}
@@ -65,8 +46,6 @@ func GetTdoa(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error JSON Marshal - " + errMarshal.Error())
 		return
 	}
-
-	log.Println("Ending GetTdoa")
 
 	// Send response
 	io.WriteString(w, string(jsonResponse))

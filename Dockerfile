@@ -10,6 +10,5 @@ FROM alpine:latest AS prod
 
 WORKDIR /root/
 COPY --from=build /geo-api/build/geo-api .
-COPY schema/geo-schema.json schema/geo-schema.json
 
 ENTRYPOINT ["./geo-api"]
