@@ -13,7 +13,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	"time"
 
 	"./swagger"
 	// WARNING!
@@ -84,9 +83,9 @@ func sq(x float64) float64 {
 	return math.Pow(x, 2)
 }
 
-func tdoa(g1, g2, g3 swagger.GatewayReceptionTdoa) swagger.LocationEstimate {
+func toa(g1, g2, g3 swagger.GatewayReceptionTdoa) swagger.LocationEstimate {
 
-	v := 50.0
+	v := 1.0
 
 	cX1 := -2 * (g2.AntennaLocation.Latitude - g1.AntennaLocation.Latitude)
 	cX2 := -2 * (g3.AntennaLocation.Latitude - g2.AntennaLocation.Latitude)
@@ -116,47 +115,132 @@ func tdoa(g1, g2, g3 swagger.GatewayReceptionTdoa) swagger.LocationEstimate {
 
 }
 
-func main() {
+func tdoa(g1, g2, g3, g4 swagger.GatewayReceptionTdoa) swagger.LocationEstimate {
 
-	tm := time.Unix(1518328047, 0)
-	fmt.Println(tm)
+	const c = 0.000299792458 // Speed of light in km/ns
+
+	// Coordinates of gateways
+	x1 := g1.AntennaLocation.Longitude
+	y1 := g1.AntennaLocation.Latitude
+
+	x2 := g2.AntennaLocation.Longitude
+	y2 := g2.AntennaLocation.Latitude
+
+	x3 := g3.AntennaLocation.Longitude
+	y3 := g3.AntennaLocation.Latitude
+
+	x4 := g4.AntennaLocation.Longitude
+	y4 := g4.AntennaLocation.Latitude
+
+	// Distances
+	dr2 := c * float64(g2.Toa-g1.Toa)
+	dr3 := c * float64(g3.Toa-g1.Toa)
+	dr4 := c * float64(g4.Toa-g1.Toa)
+
+	/*
+		Substraction of circle equations to have linear equations,
+		e1 : c2 - c1, e2 : c3 - c1, e3: c4 - c1
+	*/
+
+	/* Coefficients of equations with:
+	ei: x*Xi + y*Yi + r*Ri = Ci */
+	X1 := 2. * (x1 - x2)
+	Y1 := 2. * (y1 - y2)
+	R1 := -2. * dr2
+	C1 := sq(dr2) - sq(x2) - sq(y2) + sq(x1) + sq(y1)
+
+	X2 := 2. * (x1 - x3)
+	Y2 := 2. * (y1 - y3)
+	R2 := -2. * dr3
+	C2 := sq(dr3) - sq(x3) - sq(y3) + sq(x1) + sq(y1)
+
+	X3 := 2. * (x1 - x4)
+	Y3 := 2. * (y1 - y4)
+	R3 := -2. * dr4
+	C3 := sq(dr4) - sq(x4) - sq(y4) + sq(x1) + sq(y1)
+
+	/* Second rank coefficients with:
+	e1: x*CX1 + y*CY1 = CC1
+	e2: x*CX2 + y*CY2 = CC2
+	e3: x*X3 + y*Y3 + r*R3 = C3
+	*/
+	CX1 := X1 - X3*R1/R3
+	CX2 := X2 - X3*R2/R3
+
+	CY1 := Y1 - Y3*R1/R3
+	CY2 := Y2 - Y3*R2/R3
+
+	CC1 := C1 - C3*R1/R3
+	CC2 := C2 - C3*R2/R3
+
+	/* Third rank coefficients with:
+	e1: x*TX1 = TC1
+	e2: x*CX2 + y*CY2 = CC2
+	e3: x*X3 + y*Y3 + r*R3 = C3
+	*/
+	TX1 := CX1 - CX2*CY1/CY2
+	TC1 := CC1 - CC2*CY1/CY2
+
+	// Final coordinates
+
+	X := TC1 / TX1
+	Y := (CC2 - X*CX2) / CY2
+
+	return swagger.LocationEstimate{X, Y, 0, 0}
+}
+
+func main() {
+	//tm := time.Unix(1518328047, 0)
+	//fmt.Println(tm)
 
 	var json3Sat = []byte(`[
 	{
-		"gatewayId": "string",
+		"gatewayId": "G1",
     "antennaId": 0,
-    "rssi": 2,
+    "rssi": 3.886,
     "snr": 0,
-    "toa": 0,
+    "toa": 1033356,
     "encryptedToa": "",
     "antennaLocation": {
-      "latitude": 4,
-      "longitude": 0,
+      "latitude": 8.0,
+      "longitude": 6.0,
       "altitude": 0
 		}
 	},
 	{
-		"gatewayId": "string",
+		"gatewayId": "G2",
     "antennaId": 0,
-    "rssi": 2,
+    "rssi": 4.24,
     "snr": 0,
-    "toa": 0,
+    "toa": 1061506,
     "encryptedToa": "",
     "antennaLocation": {
-      "latitude": 2,
-      "longitude": 2,
+      "latitude": -12.0,
+      "longitude": 14.0,
       "altitude": 0
 		}
 	},{
-		"gatewayId": "string",
+		"gatewayId": "G3",
     "antennaId": 0,
-    "rssi": 2,
+    "rssi": 2.091,
     "snr": 0,
-    "toa": 0,
+    "toa": 1048568,
     "encryptedToa": "",
     "antennaLocation": {
-      "latitude": 4,
-      "longitude": 4,
+      "latitude": -4.0,
+      "longitude": -14.0,
+      "altitude": 0
+		}
+	},{
+		"gatewayId": "G4",
+    "antennaId": 0,
+    "rssi": 2.091,
+    "snr": 0,
+    "toa": 1059670,
+    "encryptedToa": "",
+    "antennaLocation": {
+      "latitude": 16.0,
+      "longitude": -8.0,
       "altitude": 0
 		}
 	}
@@ -166,11 +250,17 @@ func main() {
 	if err != nil {
 		fmt.Println("error:", err)
 	}
-	fmt.Printf("%v", sats)
-	if len(sats) < 3 {
-		fmt.Println("error: you should provide at least 3 gateway data")
-	} else {
-		fmt.Println(inter3(sats[0], sats[1], sats[2]))
-	}
+	/*
+		fmt.Printf("%v", sats)
+
+
+			if len(sats) < 3 {
+				fmt.Println("error: you should provide at least 3 gateway data")
+			} else {
+				fmt.Println(inter3(sats[0], sats[1], sats[2]))
+			}
+	*/
+
+	fmt.Println(tdoa(sats[0], sats[1], sats[2], sats[3]))
 
 }
